@@ -118,11 +118,33 @@ The analyze mode emits a list of capabilities often seen in malware, categorized
 Requirements:
 
 * [go](https://go.dev/) - the programming language
-* [rust](https://www.rust-lang.org) - yara-x requirement
+* [rust](https://www.rust-lang.org) - used to build yara-x (install via [rustup](https://rustup.rs/))
 * [yara-x](https://virustotal.github.io/yara-x/) - Rust implementation of YARA
-* [pkgconf](http://pkgconf.org/) - required by Go to find C dependencies, included in many UNIX distributions
+* [pkgconf](http://pkgconf.org/) - required by Go to find C dependencies
+* `libssl-dev` - required by yara-x on Debian/Ubuntu
 
-To install yara-x, first install Rust and then run `make install-yara-x` which will clone the yara-x repository and install yara-x's dependenicies and its C API.
+### Building locally
+
+1. Install the dependencies. On Debian/Ubuntu you can run:
+
+   ```bash
+   sudo apt-get install -y pkgconf libssl-dev
+   ```
+
+   Ensure Go is installed and install Rust with `rustup` if it's not already available.
+
+2. Run `make install-yara-x` to clone the yara-x repository and build its C API. The
+   `yara_xcapi.pc` file will be generated under `./out/lib/pkgconfig`.
+   If `pkgconf` cannot locate this file, copy it to `/usr/lib/pkgconfig/` or add
+   that directory to `PKG_CONFIG_PATH`.
+
+3. Build the malcontent binary with:
+
+   ```bash
+   make out/mal
+   ```
+
+   The resulting binary is `out/mal`.
 
 For more information about the yara-x C API, reference the documentation here: https://virustotal.github.io/yara-x/docs/api/c/c-/#building-the-c-library.
 
